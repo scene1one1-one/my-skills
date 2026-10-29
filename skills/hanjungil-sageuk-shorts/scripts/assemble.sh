@@ -1,7 +1,7 @@
 set -e
 cd "$(dirname "$0")"
 python3 layout.py
-python3 kinetic.py
+python3 wordfx.py
 FR=24; VF="scale=1080:608:flags=lanczos,setsar=1"
 # normalize audio pieces
 for c in kr cn jp; do
@@ -15,8 +15,8 @@ for c in kr cn jp; do
   ffmpeg -v error -y -loop 1 -t $D -i start_$c.png -vf "scale=1920:-1,zoompan=z='1+0.0025*on':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x608:fps=$FR,setsar=1" -frames:v $(python3 -c "print(round($D*$FR))") -r $FR mont_$c.mp4
 done
 ffmpeg -v error -y -i mont_kr.mp4 -i mont_cn.mp4 -i mont_jp.mp4 -filter_complex "[0][1][2]concat=n=3:v=1:a=0" mont.mp4
-ffmpeg -v error -y -loop 1 -i ov_intro.png -i mont.mp4 -i narn_intro.wav -i bgm_intro.mp3 -filter_complex \
- "[0]format=yuv420p[bg];[bg][1]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[3]atrim=0.5:4.4,asetpts=PTS-STARTPTS,loudnorm=I=-27,aresample=48000,afade=t=in:d=0.3[b];[2][b]amix=inputs=2:duration=longest:normalize=0,apad,atrim=0:3.9[a]" \
+ffmpeg -v error -y -loop 1 -i ov_intro.png -i mont.mp4 -i narn_intro.wav -i bgm_intro.mp3 -framerate $FR -i kin_intro/f%04d.png -filter_complex \
+ "[0]format=yuv420p[bg0];[bg0][4]overlay=0:1250:eof_action=repeat[bg];[bg][1]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[3]atrim=0.5:4.4,asetpts=PTS-STARTPTS,loudnorm=I=-27,aresample=48000,afade=t=in:d=0.3[b];[2][b]amix=inputs=2:duration=longest:normalize=0,apad,atrim=0:3.9[a]" \
  -map "[v]" -map "[a]" -t 3.9 -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg0.mp4
 # country cuts
 for c in kr cn jp; do
@@ -40,5 +40,5 @@ ffmpeg -v error -y -loop 1 -t 2.8 -i ov_outro.png -i narn_outro.wav -i bgmn_king
  "[0]fps=$FR,format=yuv420p,fade=t=out:st=2.5:d=0.3[v];[2]atrim=$KD:$KE,asetpts=PTS-STARTPTS,volume=-3dB[b];[1][b]amix=inputs=2:duration=longest:normalize=0,apad,atrim=0:2.8[a]" \
  -map "[v]" -map "[a]" -t 2.8 -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg9.mp4
 printf "file seg0.mp4\nfile seg_kr.mp4\nfile seg_cn.mp4\nfile seg_jp.mp4\nfile seg_king.mp4\nfile seg9.mp4\n" > list.txt
-ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v8.mp4
-ffprobe -v error -show_entries format=duration -of csv=p=0 final_v8.mp4
+ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v9.mp4
+ffprobe -v error -show_entries format=duration -of csv=p=0 final_v9.mp4

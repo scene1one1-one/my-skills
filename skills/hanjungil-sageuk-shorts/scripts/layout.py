@@ -49,8 +49,7 @@ def onvideo(c,out):
     glowsub(CUTS[c]["line"],out)
 def intro(out):
     im,d=base(None)
-    ctext(d,1250,"같은 대사,",F(76,True),(255,255,255))
-    ctext(d,1355,"한중일 사극은 어떻게 다를까?",F(68,True),(255,255,255))
+    # intro line is animated by wordfx.py (clip wipe)
     dots(d,0);im.save(out)
 def outro(out,thumbs):
     im,d=base(None)

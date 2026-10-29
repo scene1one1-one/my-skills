@@ -34,7 +34,9 @@ EP.01 반전: 조선 왕이 "아우! 왕 이거 진짜 드러워서 못 해먹�
 - 배경은 검은색. 상단에 큰 제목(대사, 신라문화체 `Shilla_CultureB.ttf` 124px)과 부제(페이퍼로지 `Paperlogy-5Medium.ttf` 48px). 작은 시리즈 라벨은 넣지 않는다.
 - 영상 위 원어 대사 자막: `LXGWWenKaiKR-Light.ttf` 48px 흰 글자, 테두리 없이 아주 옅게 번진 검은 그림자만(영화 자막 스타일, `glowsub`).
 - 나라 배지("1  조선 · 한국"): 페이퍼로지 5 Medium 46px (디자인은 추후 개선 예정).
-- 영상 밖 한글 대사: 신라문화체 58px, 테두리·그림자 없음. 하이퍼 모션으로 등장(`scripts/kinetic.py`: 글자별 순차 팝인, 커졌다 튕기며 안착, 다 나오면 짧은 흔들림. 나라별 톤: 조선 중간, 중국 빠르고 강하게, 일본 느리고 흔들림 없이). 직역보다 조사나 꾸밈말을 살짝 넣은 자연스러운 의역(예: "폐하, 결코 그리하셔선 아니 되옵니다!"). 글꼴 파일: History-Actor `series-same-line/ep01/fonts/`.
+- 영상 밖 한글 대사: 신라문화체 58px, 테두리·그림자 없음. Word-Sweep Highlight로 등장(`scripts/wordfx.py` `sweep`: HyperFrames `caption-highlight` 이식. 말하는 단어 뒤로 나라 테마색 둥근 배경이 왼쪽→오른쪽으로 0.15초에 쓸고 지나감, 조선(흰 배경)은 활성 단어 글자를 검게. 단어 타이밍은 `SWEEP` 표에 실제 발화 구간에 맞춰 적는다).
+- 인트로 문구 "같은 대사, / 한중일 사극은 어떻게 다를까?": Clip Wipe(`wordfx.py` `clipwipe`: `caption-clip-wipe` 이식, 단어별 왼쪽→오른쪽 0.3초 와이프, 강조 단어 "같은 대사," "한중일"은 노란색 #FFD700). 단어 타이밍은 나레이션을 faster-whisper word_timestamps로 잡는다.
+- HyperFrames 효과 이름을 지정받으면 `npx hyperframes add <이름>`으로 컴포넌트 HTML을 받아 타이밍·색·이징을 확인하고 PIL 프레임 시퀀스로 옮긴다(투명 PNG → ffmpeg overlay). 글꼴 파일: History-Actor `series-same-line/ep01/fonts/`.
 - 반전 컷은 영상과 인물 자막만. 배지, 질문 문구, 해시태그를 넣지 않는다.
 - 영상은 16:9를 가운데에(y=540, 1080×608). 위아래에 테마 컬러 선.
 - 테마 컬러: 조선 흰색, 중국 빨강, 일본 파랑. 나라 배지, 해시태그, 하단 1·2·3 표시에 적용.
