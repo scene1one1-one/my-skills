@@ -35,7 +35,7 @@ EP.01 반전: 조선 왕이 "아우! 왕 이거 진짜 드러워서 못 해먹�
 - 영상 위 원어 대사 자막: `LXGWWenKaiKR-Light.ttf` 48px 흰 글자, 테두리 없이 아주 옅게 번진 검은 그림자만(영화 자막 스타일, `glowsub`).
 - 나라 배지("1  조선 · 한국"): 페이퍼로지 5 Medium 46px (디자인은 추후 개선 예정).
 - 영상 밖 한글 대사: 신라문화체 58px, 테두리·그림자 없음. Clip Wipe로 등장(`scripts/wordfx.py` `linewipe`: HyperFrames `caption-clip-wipe` 이식, 말하는 단어마다 왼쪽→오른쪽 0.3초 와이프, 배경 블록 강조 없음. 단어 타이밍은 `SWEEP` 표에 실제 발화 구간에 맞춰 적는다).
-- 인트로 문구 "같은 대사, / 한중일 사극은 어떻게 다를까?": Clip Wipe(`wordfx.py` `clipwipe`: `caption-clip-wipe` 이식, 단어별 왼쪽→오른쪽 0.3초 와이프, 글꼴 페이퍼로지 5 Medium, "같은 대사,"는 노란색 #FFD700, "한중일"은 글자별 테마색 한=흰색 중=빨강 일=파랑). 단어 타이밍은 나레이션을 faster-whisper word_timestamps로 잡는다.
+- 인트로 문구: 시리즈 고정 틀 "[주제] / 한중일은 어떻게 다를까?" (위쪽 부제를 강조하는 시작 문장). EP.01은 "목숨 걸고 말리는 신하 / 한중일은 어떻게 다를까?", 나레이션도 같은 문장. Clip Wipe(`wordfx.py` `clipwipe`: `caption-clip-wipe` 이식, 단어별 왼쪽→오른쪽 0.3초 와이프, 페이퍼로지 5 Medium). 첫 줄 핵심어("목숨 걸고")는 노란색 #FFD700, "한중일"은 글자별 테마색 한=흰색 중=빨강 일=파랑(뒤 조사는 흰색). 나레이션은 3.9초 안에 끝나도록 atempo로 맞추고, 단어 타이밍은 faster-whisper word_timestamps로 잡는다.
 - 반전 컷 영상 아래(y=1190) 3줄 자막: 한국어 대사의 로마자 발음(영어 번역 아님, 흰색), 중국어 번역(빨강), 일본어 번역(파랑), LXGW 글꼴. Line Swap(`wordfx.py` `kingswap`: HyperFrames `line-swap` 이식, 대사가 바뀔 때마다 이전 줄은 위로 빠지고 새 줄이 아래에서 위로 올라옴, 마스크 안에서만 보임, 줄 간격 64px로 좁게 묶어 한눈에 보이게 함). 문구와 시작 시각은 `KING_ML` 표에 적는다.
 - HyperFrames 효과 이름을 지정받으면 `npx hyperframes add <이름>`으로 컴포넌트 HTML을 받아 타이밍·색·이징을 확인하고 PIL 프레임 시퀀스로 옮긴다(투명 PNG → ffmpeg overlay). 글꼴 파일: History-Actor `series-same-line/ep01/fonts/`.
 - 반전 컷은 영상과 인물 자막만. 배지, 질문 문구, 해시태그를 넣지 않는다.

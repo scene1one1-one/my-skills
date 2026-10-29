@@ -42,8 +42,8 @@ def sweep(c,outdir,dur=5.0):
             if ga<1: im.putalpha(im.split()[3].point(lambda v:int(v*ga)))
         im.save(f"{outdir}/f{fi:04d}.png")
 # intro clip wipe, two lines, keywords yellow
-INTRO=[[("같은",0.0,0.28,True),("대사,",0.28,0.78,True)],
-       [("한중일",1.46,1.96,"kcj"),("사극은",1.96,2.54,False),("어떻게",2.54,3.06,False),("다를까?",3.06,3.68,False)]]
+INTRO=[[("목숨",0.0,0.4,True),("걸고",0.4,0.64,True),("말리는",0.64,1.0,False),("신하",1.0,1.47,False)],
+       [("한중일은",1.98,2.7,"kcj"),("어떻게",2.83,3.3,False),("다를까?",3.3,3.8,False)]]
 def clipwipe(outdir,dur=3.9,top=1230,sizes=(76,68),lh=105):
     os.makedirs(outdir,exist_ok=True);d0=ImageDraw.Draw(Image.new("RGB",(4,4)));H=260
     lines=[]
@@ -60,8 +60,8 @@ def clipwipe(outdir,dur=3.9,top=1230,sizes=(76,68),lh=105):
                 g=Image.new("RGBA",(L.W,H),(0,0,0,0));gd=ImageDraw.Draw(g)
                 if kw=="kcj":  # 한=white 중=red 일=blue (country theme colours)
                     cx=xs[i]
-                    for ch,k in zip(w,["kr","cn","jp"]):
-                        col=L.THEME[k] if t>=s+0.1 else (255,255,255)
+                    for ch,k in zip(w,["kr","cn","jp"]+[None]*len(w)):
+                        col=L.THEME[k] if (k and t>=s+0.1) else (255,255,255)
                         gd.text((cx,y),ch,font=f,fill=col+(255,));cx+=gd.textlength(ch,font=f)
                 else:
                     color=(255,215,0) if (kw and t>=s+0.1) else (255,255,255)
