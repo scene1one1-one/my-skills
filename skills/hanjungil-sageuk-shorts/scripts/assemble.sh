@@ -1,4 +1,5 @@
 set -e
+set -o pipefail
 cd "$(dirname "$0")"
 python3 layout.py
 python3 wordfx.py
@@ -23,22 +24,22 @@ for c in kr cn jp; do
   Z="$VF"
   [ $c = jp ] && Z="scale=2560:-1,zoompan=z='1+0.4*on/121':x='iw/2-iw/zoom/2':y='(ih-ih/zoom)*0.12':d=1:s=1080x608:fps=24,setsar=1"
   T=$(python3 -c "import layout;a,b=layout.CUTS['$c']['sub'];print(f'between(t,{a},{b})')")
-  ffmpeg -v error -y -loop 1 -i ov_$c.png -i cut_$c.mp4 -i bgmn_$c.wav -loop 1 -i sub_$c.png -framerate $FR -i kin_$c/f%04d.png -filter_complex \
-   "[0]format=yuv420p[bg0];[bg0][4]overlay=0:1300:eof_action=repeat[bg];[1:v]$Z[cv0];[cv0][3]overlay=0:0:enable='$T':shortest=1[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-15:TP=-1.5,aresample=48000,afade=t=in:d=0.05[d];[d][2]amix=inputs=2:duration=first:normalize=0[a]" \
+  ffmpeg -v error -y -loop 1 -i ov_$c.png -i cut_$c.mp4 -i bgmn_$c.wav -loop 1 -i sub_$c.png -framerate $FR -i kin_$c/f%04d.png -i sfx_drum.mp3 -filter_complex \
+   "[0]format=yuv420p[bg0];[bg0][4]overlay=0:1300:eof_action=repeat[bg];[1:v]$Z[cv0];[cv0][3]overlay=0:0:enable='$T':shortest=1[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-15:TP=-1.5,aresample=48000,afade=t=in:d=0.05[d];[5]volume=-6dB,aresample=48000[s];[d][2][s]amix=inputs=3:duration=first:normalize=0[a]" \
    -map "[v]" -map "[a]" -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg_$c.mp4
 done
 # king reversal (breaths cut)
 KD=$(ffprobe -v error -show_entries format=duration -of csv=p=0 cut_king_fast.mp4)
 KE=$(python3 -c "print($KD+3)")
 ffmpeg -v error -y -ss 3 -i bgm_king.mp3 -t 14 -af "loudnorm=I=-24:TP=-3,afade=t=in:d=0.03" -ar 48000 -ac 2 bgmn_king.wav
-ffmpeg -v error -y -loop 1 -i ov_king.png -i cut_king_fast.mp4 -i bgmn_king.wav -loop 1 -i sub_king0.png -loop 1 -i sub_king1.png -loop 1 -i sub_king2.png -filter_complex \
- "[0]format=yuv420p[bg];[1:v]$VF[k0];[k0][3]overlay=0:0:enable='between(t,0,1.17)':shortest=1[k1];[k1][4]overlay=0:0:enable='between(t,1.17,3.62)'[k2];[k2][5]overlay=0:0:enable='gte(t,3.62)'[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-14:TP=-1.5,aresample=48000[d];[2]atrim=0:$KD[b];[d][b]amix=inputs=2:duration=first:normalize=0[a]" \
+ffmpeg -v error -y -loop 1 -i ov_king.png -i cut_king_fast.mp4 -i bgmn_king.wav -loop 1 -i sub_king0.png -loop 1 -i sub_king1.png -loop 1 -i sub_king2.png -framerate $FR -i kin_king/f%04d.png -i sfx_tsudumi.mp3 -filter_complex \
+ "[0]format=yuv420p[bg0];[bg0][6]overlay=0:1190:eof_action=repeat[bg];[1:v]$VF[k0];[k0][3]overlay=0:0:enable='between(t,0,1.17)':shortest=1[k1];[k1][4]overlay=0:0:enable='between(t,1.17,3.62)'[k2];[k2][5]overlay=0:0:enable='gte(t,3.62)'[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-14:TP=-1.5,aresample=48000[d];[2]atrim=0:$KD[b];[7]volume=-3dB,aresample=48000[s];[d][b][s]amix=inputs=3:duration=first:normalize=0[a]" \
  -map "[v]" -map "[a]" -t $KD -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg_king.mp4
 # outro thumbs from last frames
 for c in kr cn jp; do ffmpeg -v error -y -sseof -0.3 -i cut_$c.mp4 -frames:v 1 last_$c.png; done
-ffmpeg -v error -y -loop 1 -t 2.8 -i ov_outro.png -i narn_outro.wav -i bgmn_king.wav -filter_complex \
- "[0]fps=$FR,format=yuv420p,fade=t=out:st=2.5:d=0.3[v];[2]atrim=$KD:$KE,asetpts=PTS-STARTPTS,volume=-3dB[b];[1][b]amix=inputs=2:duration=longest:normalize=0,apad,atrim=0:2.8[a]" \
+ffmpeg -v error -y -loop 1 -t 2.8 -i ov_outro.png -i narn_outro.wav -i bgmn_king.wav -i sfx_end.mp3 -filter_complex \
+ "[0]fps=$FR,format=yuv420p,fade=t=out:st=2.5:d=0.3[v];[2]atrim=$KD:$KE,asetpts=PTS-STARTPTS,volume=-3dB[b];[3]volume=-3dB,aresample=48000[s];[1][b][s]amix=inputs=3:duration=longest:normalize=0,apad,atrim=0:2.8[a]" \
  -map "[v]" -map "[a]" -t 2.8 -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg9.mp4
 printf "file seg0.mp4\nfile seg_kr.mp4\nfile seg_cn.mp4\nfile seg_jp.mp4\nfile seg_king.mp4\nfile seg9.mp4\n" > list.txt
-ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v11.mp4
-ffprobe -v error -show_entries format=duration -of csv=p=0 final_v11.mp4
+ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v12.mp4
+ffprobe -v error -show_entries format=duration -of csv=p=0 final_v12.mp4

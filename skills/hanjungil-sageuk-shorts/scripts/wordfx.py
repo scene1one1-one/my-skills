@@ -86,6 +86,52 @@ def linewipe(c,outdir,dur=5.0):
             p=p2out((t-s)/0.3);md.rectangle([xs[i]-6,0,xs[i]-6+(ws[i]+14)*p,BOXH],fill=255)
         im=Image.new("RGBA",(L.W,BOXH),(0,0,0,0));im.paste(full,(0,0),mask);im.save(f"{outdir}/f{fi:04d}.png")
 
+
+# king reversal: romanized / Chinese / Japanese lines below the video, HyperFrames line-swap (bottom-up through a mask)
+KING_ML=[  # (start, romanization, Chinese, Japanese) aligned with layout.KING subs
+ (0.0, "Au!", "哎哟！", "あーもう！"),
+ (1.17,"Wang igeo jinjja deureowoseo mot haemeokgenne!","这皇帝我真是干不下去了！","王なんて、もうやってられるか！"),
+ (3.62,"Niga wang haseyo!","你来当皇帝吧！","お前が王をやれ！"),
+]
+def p4out(x): x=min(max(x,0),1); return 1-(1-x)**4
+def kingswap(outdir,dur):
+    os.makedirs(outdir,exist_ok=True);H=420;ROWH=110;ROWY=[20,150,280]
+    cols=[L.THEME["kr"],L.THEME["cn"],(90,140,235)]
+    d0=ImageDraw.Draw(Image.new("RGB",(4,4)))
+    def fit(t,base):
+        sz=base
+        while sz>28 and d0.textlength(t,font=L.FF(L.LINE,sz))>1000: sz-=2
+        return L.FF(L.LINE,sz)
+    rows=[]  # per row: list of rendered strip images per beat
+    for r in range(3):
+        strips=[]
+        for b in KING_ML:
+            txt=b[1+r];f=fit(txt,50 if r==0 else 56);s=Image.new("RGBA",(L.W,ROWH),(0,0,0,0))
+            dd=ImageDraw.Draw(s);w=dd.textlength(txt,font=f);asc,desc=f.getmetrics()
+            dd.text(((L.W-w)/2,(ROWH-asc-desc)/2),txt,font=f,fill=cols[r]+(255,));strips.append(s)
+        rows.append(strips)
+    IN_A,EXIT,LAG,IN_B=0.5,0.35,0.22,0.5
+    for fi in range(int(dur*FR)+1):
+        t=fi/FR;im=Image.new("RGBA",(L.W,H),(0,0,0,0))
+        for r in range(3):
+            st=r*0.06  # slight row stagger
+            band=Image.new("RGBA",(L.W,ROWH*3),(0,0,0,0))  # mask = middle third
+            for bi,b in enumerate(KING_ML):
+                beat=b[0]+st;nxt=KING_ML[bi+1][0]+st if bi+1<len(KING_ML) else None
+                if bi==0: yin=1.15*(1-p4out((t-beat)/IN_A)) if t>=beat else None
+                else: yin=1.15*(1-p4out((t-beat-LAG)/IN_B)) if t>=beat+LAG else None
+                if yin is None: continue
+                y=yin
+                if nxt is not None and t>=nxt: y=-1.15*p2in((t-nxt)/EXIT)
+                off=int(round(y*ROWH))
+                if abs(off)>=ROWH: continue
+                band.alpha_composite(rows[r][bi],(0,ROWH+off))
+            im.alpha_composite(band.crop((0,ROWH,L.W,2*ROWH)),(0,ROWY[r]))
+        im.save(f"{outdir}/f{fi:04d}.png")
+
 if __name__=="__main__":
     for c in SWEEP: linewipe(c,f"kin_{c}")
     clipwipe("kin_intro")
+    import subprocess
+    kd=float(subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0","cut_king_fast.mp4"],capture_output=True,text=True).stdout)
+    kingswap("kin_king",kd)
