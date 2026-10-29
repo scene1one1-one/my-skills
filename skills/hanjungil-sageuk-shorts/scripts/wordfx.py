@@ -88,10 +88,10 @@ def linewipe(c,outdir,dur=5.0):
 
 
 # king reversal: romanized / Chinese / Japanese lines below the video, HyperFrames line-swap (bottom-up through a mask)
-KING_ML=[  # (start, romanization, Chinese, Japanese) aligned with layout.KING subs
- (0.0, "Au!", "哎哟！", "あーもう！"),
- (1.17,"Wang igeo jinjja deureowoseo mot haemeokgenne!","这皇帝我真是干不下去了！","王なんて、もうやってられるか！"),
- (3.62,"Niga wang haseyo!","你来当皇帝吧！","お前が王をやれ！"),
+KING_ML=[  # (start, Korean, Chinese, Japanese); romanization is on the video aligned with layout.KING subs
+ (0.0, "아우!", "哎哟！", "あーもう！"),
+ (1.17,"왕 이거 진짜 드러워서 못 해먹겠네!","这皇帝我真是干不下去了！","王なんて、もうやってられるか！"),
+ (3.62,"니가 왕 하세요!","你来当皇帝吧！","お前が王をやれ！"),
 ]
 def p4out(x): x=min(max(x,0),1); return 1-(1-x)**4
 def kingswap(outdir,dur):

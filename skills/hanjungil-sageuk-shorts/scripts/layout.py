@@ -36,7 +36,9 @@ def cut(c,out):
     dots(d,k["n"]);im.save(out)
 def glowsub(text,out):
     """movie-style subtitle: thin white text with a soft faint dark glow, no outline"""
-    f=FF(LINE,48);y=VH-90
+    sz=48
+    while sz>30 and ImageDraw.Draw(Image.new("RGB",(4,4))).textlength(text,font=FF(LINE,sz))>1000: sz-=2
+    f=FF(LINE,sz);y=VH-90
     g=Image.new("RGBA",(W,VH),(0,0,0,0));gd=ImageDraw.Draw(g);ctext(gd,y,text,f,(0,0,0,255),4,(0,0,0,255))
     g=g.filter(ImageFilter.GaussianBlur(9));a=g.split()[3].point(lambda v:int(v*0.55));g.putalpha(a)
     t=Image.new("RGBA",(W,VH),(0,0,0,0));ctext(ImageDraw.Draw(t),y,text,f,(255,255,255,255))
@@ -65,7 +67,7 @@ if __name__=="__main__":
     intro("ov_intro.png");outro("ov_outro.png",["last_kr.png","last_cn.png","last_jp.png"])
 
 KING=dict(badge="반전  ·  그 시각 조선의 왕",tag="#왕_퇴사_선언",
-          subs=[("아우!",0.0,1.17),("왕 이거 진짜 드러워서 못 해먹겠네!",1.17,3.62),("니가 왕 하세요!",3.62,6.3)])
+          subs=[("Au!",0.0,1.17),("Wang igeo jinjja deureowoseo mot haemeokgenne!",1.17,3.62),("Niga wang haseyo!",3.62,6.3)])  # on-video = romanization, Hangul goes below (user v17)
 def king(out):
     im,d=base("kr")
     im.save(out)
