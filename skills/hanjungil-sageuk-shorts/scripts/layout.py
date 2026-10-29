@@ -33,14 +33,14 @@ def cut(c,out):
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
     ctext(d,1196,t,f,(0,0,0) if c=="kr" else (255,255,255))
     y=1320
-    ctext(d,y,k["tr"],FF(LINE,68),(255,255,255),1,(255,255,255));y+=100
+    ctext(d,y,k["tr"],FF(LINE,54),(255,255,255),1,(255,255,255));y+=90
     if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
     ctext(d,1560,k["tag"],F(44),col if c!="kr" else (220,220,220))
     dots(d,k["n"]);im.save(out)
 def onvideo(c,out):
     """transparent 1080x608 movie-style subtitle in original language"""
     im=Image.new("RGBA",(W,VH),(0,0,0,0));d=ImageDraw.Draw(im);k=CUTS[c]
-    f=FF(LINE,60);ctext(d,VH-104,k["line"],f,(255,255,255),5,(0,0,0))
+    f=FF(LINE,48);ctext(d,VH-90,k["line"],f,(255,255,255))
     im.save(out)
 def intro(out):
     im,d=base(None)
@@ -70,5 +70,5 @@ def king(out):
     im.save(out)
     for i,(s,a,b) in enumerate(KING["subs"]):
         o=Image.new("RGBA",(W,VH),(0,0,0,0));dd=ImageDraw.Draw(o)
-        ctext(dd,VH-104,s,FF(LINE,60),(255,255,255),5,(0,0,0));o.save(f"sub_king{i}.png")
+        ctext(dd,VH-90,s,FF(LINE,48),(255,255,255));o.save(f"sub_king{i}.png")
 if __name__=="__main__": king("ov_king.png")
