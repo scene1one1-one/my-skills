@@ -29,9 +29,9 @@ def dots(d,active):
         d.text((x-w/2,1760-26),t,font=f,fill=((0,0,0) if k=="kr" else (255,255,255)) if on else c)
 def cut(c,out):
     im,d=base(c);k=CUTS[c];col=THEME[c]
-    f=F(46);t=f"{k['n']}  {k['badge']}";w=d.textlength(t,font=f)
+    f=FF(SUBT,46);t=f"{k['n']}  {k['badge']}";w=d.textlength(t,font=f)
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
-    ctext(d,1196,t,f,(0,0,0) if c=="kr" else (255,255,255))
+    ctext(d,1200,t,f,(0,0,0) if c=="kr" else (255,255,255))
     y=1320
     ctext(d,y,k["tr"],FF(TITLE,58),(255,255,255));y+=95
     if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
