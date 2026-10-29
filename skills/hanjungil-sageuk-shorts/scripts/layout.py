@@ -1,9 +1,8 @@
-import os
 from PIL import Image,ImageDraw,ImageFont,ImageFilter
 W,H=1080,1920;VY=540;VH=608
 SANS="/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc";SERIF="/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc"
 LANG={"kr":1,"cn":2,"jp":0}
-FD=os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","fonts")+"/";TITLE=FD+"Shilla_CultureB.ttf";SUBT=FD+"Paperlogy-5Medium.ttf";LINE=FD+"LXGWWenKaiKR-Light.ttf"
+FD="fonts2/";TITLE=FD+"Shilla_CultureB.ttf";SUBT=FD+"Paperlogy-5Medium.ttf";LINE=FD+"LXGWWenKaiKR-Light.ttf"
 def FF(path,sz): return ImageFont.truetype(path,sz)
 def F(sz,serif=False,lang="kr"): return ImageFont.truetype(SERIF if serif else SANS,sz,index=LANG[lang])
 def ctext(d,y,t,f,fill,stroke=0,sc="black",w0=W):
@@ -32,10 +31,8 @@ def cut(c,out):
     f=FF(SUBT,46);t=f"{k['n']}  {k['badge']}";w=d.textlength(t,font=f)
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
     ctext(d,1200,t,f,(0,0,0) if c=="kr" else (255,255,255))
-    y=1320
-    y+=95  # Korean line is animated by kinetic.py
-    if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
-    ctext(d,1560,k["tag"],F(44),col if c!="kr" else (220,220,220))
+    ctext(d,1300,k["tag"],F(44),col if c!="kr" else (220,220,220))
+    # Korean line below the tag is animated by wordfx.py (no pronunciation line, user v15)
     dots(d,k["n"]);im.save(out)
 def glowsub(text,out):
     """movie-style subtitle: thin white text with a soft faint dark glow, no outline"""

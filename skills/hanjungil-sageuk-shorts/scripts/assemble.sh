@@ -25,7 +25,7 @@ for c in kr cn jp; do
   [ $c = jp ] && Z="scale=2560:-1,zoompan=z='1+0.4*on/121':x='iw/2-iw/zoom/2':y='(ih-ih/zoom)*0.12':d=1:s=1080x608:fps=24,setsar=1"
   T=$(python3 -c "import layout;a,b=layout.CUTS['$c']['sub'];print(f'between(t,{a},{b})')")
   ffmpeg -v error -y -loop 1 -i ov_$c.png -i cut_$c.mp4 -i bgmn_$c.wav -loop 1 -i sub_$c.png -framerate $FR -i kin_$c/f%04d.png -i sfx_drum.mp3 -filter_complex \
-   "[0]format=yuv420p[bg0];[bg0][4]overlay=0:1300:eof_action=repeat[bg];[1:v]$Z[cv0];[cv0][3]overlay=0:0:enable='$T':shortest=1[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-15:TP=-1.5,aresample=48000,afade=t=in:d=0.05[d];[5]volume=-6dB,aresample=48000[s];[d][2][s]amix=inputs=3:duration=first:normalize=0[a]" \
+   "[0]format=yuv420p[bg0];[bg0][4]overlay=0:1390:eof_action=repeat[bg];[1:v]$Z[cv0];[cv0][3]overlay=0:0:enable='$T':shortest=1[cv];[bg][cv]overlay=0:540:shortest=1,fps=$FR,format=yuv420p[v];[1:a]loudnorm=I=-15:TP=-1.5,aresample=48000,afade=t=in:d=0.05[d];[5]volume=-6dB,aresample=48000[s];[d][2][s]amix=inputs=3:duration=first:normalize=0[a]" \
    -map "[v]" -map "[a]" -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg_$c.mp4
 done
 # king reversal (breaths cut)
