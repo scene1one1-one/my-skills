@@ -33,7 +33,7 @@ def cut(c,out):
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
     ctext(d,1200,t,f,(0,0,0) if c=="kr" else (255,255,255))
     y=1320
-    ctext(d,y,k["tr"],FF(TITLE,58),(255,255,255));y+=95
+    y+=95  # Korean line is animated by kinetic.py
     if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
     ctext(d,1560,k["tag"],F(44),col if c!="kr" else (220,220,220))
     dots(d,k["n"]);im.save(out)
