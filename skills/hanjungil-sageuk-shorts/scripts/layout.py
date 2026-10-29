@@ -1,7 +1,10 @@
+import os
 from PIL import Image,ImageDraw,ImageFont
 W,H=1080,1920;VY=540;VH=608
 SANS="/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc";SERIF="/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc"
 LANG={"kr":1,"cn":2,"jp":0}
+FD=os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","fonts")+"/";TITLE=FD+"Shilla_CultureB.ttf";SUBT=FD+"Paperlogy-5Medium.ttf";LINE=FD+"LXGWWenKaiKR-Light.ttf"
+def FF(path,sz): return ImageFont.truetype(path,sz)
 def F(sz,serif=False,lang="kr"): return ImageFont.truetype(SERIF if serif else SANS,sz,index=LANG[lang])
 def ctext(d,y,t,f,fill,stroke=0,sc="black",w0=W):
     w=d.textlength(t,font=f);d.text(((w0-w)/2,y),t,font=f,fill=fill,stroke_width=stroke,stroke_fill=sc)
@@ -13,8 +16,8 @@ CUTS={
 }
 def base(theme=None):
     im=Image.new("RGB",(W,H),(0,0,0));d=ImageDraw.Draw(im)
-    ctext(d,215,"“아니 되옵니다”",F(116,True),(255,255,255))
-    ctext(d,385,"한·중·일 신하가 왕을 막는 법",F(46),(200,200,200))
+    ctext(d,205,"“아니 되옵니다”",FF(TITLE,124),(255,255,255))
+    ctext(d,385,"한·중·일 신하가 왕을 막는 법",FF(SUBT,48),(200,200,200))
     if theme:
         c=THEME[theme];d.rectangle([0,VY-6,W,VY-1],fill=c);d.rectangle([0,VY+VH+1,W,VY+VH+6],fill=c)
     return im,d
@@ -30,14 +33,14 @@ def cut(c,out):
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
     ctext(d,1196,t,f,(0,0,0) if c=="kr" else (255,255,255))
     y=1320
-    ctext(d,y,k["tr"],F(64,True),(255,255,255));y+=100
+    ctext(d,y,k["tr"],FF(LINE,68),(255,255,255),1,(255,255,255));y+=100
     if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
     ctext(d,1560,k["tag"],F(44),col if c!="kr" else (220,220,220))
     dots(d,k["n"]);im.save(out)
 def onvideo(c,out):
     """transparent 1080x608 movie-style subtitle in original language"""
     im=Image.new("RGBA",(W,VH),(0,0,0,0));d=ImageDraw.Draw(im);k=CUTS[c]
-    f=F(54,False,c);ctext(d,VH-100,k["line"],f,(255,255,255),5,(0,0,0))
+    f=FF(LINE,60);ctext(d,VH-104,k["line"],f,(255,255,255),5,(0,0,0))
     im.save(out)
 def intro(out):
     im,d=base(None)
@@ -63,14 +66,9 @@ if __name__=="__main__":
 KING=dict(badge="반전  ·  그 시각 조선의 왕",tag="#왕_퇴사_선언",
           subs=[("아우!",0.0,1.17),("왕 이거 진짜 드러워서 못 해먹겠네!",1.17,3.62),("니가 왕 하세요!",3.62,6.3)])
 def king(out):
-    im,d=base("kr");col=THEME["kr"]
-    f=F(46);t=KING["badge"];w=d.textlength(t,font=f)
-    d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
-    ctext(d,1196,t,f,(0,0,0))
-    ctext(d,1330,"신하들의 간언을 들은 왕의 반응은?",F(52,True),(255,255,255))
-    ctext(d,1460,KING["tag"],F(44),(220,220,220))
+    im,d=base("kr")
     im.save(out)
     for i,(s,a,b) in enumerate(KING["subs"]):
         o=Image.new("RGBA",(W,VH),(0,0,0,0));dd=ImageDraw.Draw(o)
-        ctext(dd,VH-100,s,F(54),(255,255,255),5,(0,0,0));o.save(f"sub_king{i}.png")
+        ctext(dd,VH-104,s,FF(LINE,60),(255,255,255),5,(0,0,0));o.save(f"sub_king{i}.png")
 if __name__=="__main__": king("ov_king.png")
