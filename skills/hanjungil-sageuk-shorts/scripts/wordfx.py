@@ -70,6 +70,22 @@ def clipwipe(outdir,dur=3.9,top=1230,sizes=(76,68),lh=105):
                 g=g.crop((0,0,max(cut,0),H)) if cut>0 else None
                 if g: im.alpha_composite(g,(0,0))
         im.save(f"{outdir}/f{fi:04d}.png")
+
+def linewipe(c,outdir,dur=5.0):
+    """caption-clip-wipe on the Korean dialogue line: each word wipes in L->R (0.3s power2.out) on its spoken cue"""
+    os.makedirs(outdir,exist_ok=True);f=L.FF(L.TITLE,58);words=SWEEP[c]
+    d0=ImageDraw.Draw(Image.new("RGB",(4,4)));ws=[d0.textlength(w,font=f) for w,_,_ in words]
+    total=sum(ws)+GAP*(len(ws)-1);x=(L.W-total)/2;xs=[]
+    for w in ws: xs.append(x);x+=w+GAP
+    full=Image.new("RGBA",(L.W,BOXH),(0,0,0,0));fd=ImageDraw.Draw(full)
+    for i,(w,_,_) in enumerate(words): fd.text((xs[i],20),w,font=f,fill=(255,255,255,255))
+    for fi in range(int(dur*FR)+1):
+        t=fi/FR;mask=Image.new("L",(L.W,BOXH),0);md=ImageDraw.Draw(mask)
+        for i,(w,s,e) in enumerate(words):
+            if t<s: continue
+            p=p2out((t-s)/0.3);md.rectangle([xs[i]-6,0,xs[i]-6+(ws[i]+14)*p,BOXH],fill=255)
+        im=Image.new("RGBA",(L.W,BOXH),(0,0,0,0));im.paste(full,(0,0),mask);im.save(f"{outdir}/f{fi:04d}.png")
+
 if __name__=="__main__":
-    for c in SWEEP: sweep(c,f"kin_{c}")
+    for c in SWEEP: linewipe(c,f"kin_{c}")
     clipwipe("kin_intro")
