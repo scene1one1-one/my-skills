@@ -95,7 +95,7 @@ KING_ML=[  # (start, romanization, Chinese, Japanese) aligned with layout.KING s
 ]
 def p4out(x): x=min(max(x,0),1); return 1-(1-x)**4
 def kingswap(outdir,dur):
-    os.makedirs(outdir,exist_ok=True);H=420;ROWH=110;ROWY=[20,150,280]
+    os.makedirs(outdir,exist_ok=True);H=260;ROWH=70;ROWY=[20,84,148]
     cols=[L.THEME["kr"],L.THEME["cn"],(90,140,235)]
     d0=ImageDraw.Draw(Image.new("RGB",(4,4)))
     def fit(t,base):
@@ -106,7 +106,7 @@ def kingswap(outdir,dur):
     for r in range(3):
         strips=[]
         for b in KING_ML:
-            txt=b[1+r];f=fit(txt,50 if r==0 else 56);s=Image.new("RGBA",(L.W,ROWH),(0,0,0,0))
+            txt=b[1+r];f=fit(txt,46 if r==0 else 50);s=Image.new("RGBA",(L.W,ROWH),(0,0,0,0))
             dd=ImageDraw.Draw(s);w=dd.textlength(txt,font=f);asc,desc=f.getmetrics()
             dd.text(((L.W-w)/2,(ROWH-asc-desc)/2),txt,font=f,fill=cols[r]+(255,));strips.append(s)
         rows.append(strips)
