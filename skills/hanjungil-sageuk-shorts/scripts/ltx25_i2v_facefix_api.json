@@ -1,0 +1,652 @@
+{
+ "395": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "YOUR_UPLOADED_IMAGE.png"
+  },
+  "_meta": {
+   "title": "Load Image الصورة"
+  }
+ },
+ "450": {
+  "class_type": "LTXVAudioVAEDecode",
+  "inputs": {
+   "audio_vae": [
+    "417",
+    0
+   ],
+   "samples": [
+    "448",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "LTXV Audio VAE Decode"
+  }
+ },
+ "430": {
+  "class_type": "LTXVEmptyLatentAudio",
+  "inputs": {
+   "batch_size": 1,
+   "frame_rate": [
+    "440",
+    1
+   ],
+   "audio_vae": [
+    "417",
+    0
+   ],
+   "frames_number": [
+    "441",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "LTXV Empty Latent Audio"
+  }
+ },
+ "452": {
+  "class_type": "VHS_VideoCombine",
+  "inputs": {
+   "images": [
+    "900",
+    0
+   ],
+   "pix_fmt": "yuv420p",
+   "format": "video/h264-mp4",
+   "frame_rate": [
+    "440",
+    0
+   ],
+   "pingpong": false,
+   "save_output": true,
+   "filename_prefix": "joseon/king_minister_v3",
+   "loop_count": 0,
+   "save_metadata": true,
+   "crf": 19,
+   "trim_to_audio": false,
+   "no_preview": false,
+   "audio": [
+    "450",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Video Combine 🎥🅥🅗🅢"
+  }
+ },
+ "431": {
+  "class_type": "LTXVSeparateAVLatent",
+  "inputs": {
+   "av_latent": [
+    "428",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Separate AV Latent"
+  }
+ },
+ "432": {
+  "class_type": "LTXVConcatAVLatent",
+  "inputs": {
+   "audio_latent": [
+    "430",
+    0
+   ],
+   "video_latent": [
+    "429",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Concat AV Latent"
+  }
+ },
+ "411": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "weight_dtype": "default",
+   "unet_name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors"
+  },
+  "_meta": {
+   "title": "Load Diffusion Model"
+  }
+ },
+ "433": {
+  "class_type": "ResizeImageMaskNode",
+  "inputs": {
+   "input": [
+    "395",
+    0
+   ],
+   "resize_type": "scale longer dimension",
+   "scale_method": "area",
+   "resize_type.longer_size": 1536
+  },
+  "_meta": {
+   "title": "Resize Image/Mask"
+  }
+ },
+ "434": {
+  "class_type": "ComfyMathExpression",
+  "inputs": {
+   "expression": "a/2",
+   "values.a": [
+    "418",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Math Expression"
+  }
+ },
+ "413": {
+  "class_type": "PrimitiveInt",
+  "inputs": {
+   "value": 15
+  },
+  "_meta": {
+   "title": "Duration مدة الفيديو"
+  }
+ },
+ "435": {
+  "class_type": "ComfyMathExpression",
+  "inputs": {
+   "expression": "a/2",
+   "values.a": [
+    "421",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Math Expression"
+  }
+ },
+ "436": {
+  "class_type": "LTXVPreprocess",
+  "inputs": {
+   "img_compression": 12,
+   "image": [
+    "433",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXV Preprocess"
+  }
+ },
+ "415": {
+  "class_type": "LTXVConditioning",
+  "inputs": {
+   "negative": [
+    "419",
+    0
+   ],
+   "positive": [
+    "408",
+    0
+   ],
+   "frame_rate": [
+    "440",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXVConditioning"
+  }
+ },
+ "437": {
+  "class_type": "EmptyLTXVLatentVideo",
+  "inputs": {
+   "batch_size": 1,
+   "width": [
+    "434",
+    1
+   ],
+   "length": [
+    "441",
+    1
+   ],
+   "height": [
+    "435",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "EmptyLTXVLatentVideo"
+  }
+ },
+ "416": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ltx-2.5-video-vae-bf16.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "438": {
+  "class_type": "LTXVLatentUpsampler",
+  "inputs": {
+   "upscale_model": [
+    "426",
+    0
+   ],
+   "vae": [
+    "416",
+    0
+   ],
+   "samples": [
+    "431",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXVLatentUpsampler"
+  }
+ },
+ "417": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ltx-2.5-audio-vae-bf16.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "439": {
+  "class_type": "LTXVImgToVideoInplace",
+  "inputs": {
+   "bypass": false,
+   "image": [
+    "436",
+    0
+   ],
+   "strength": 1,
+   "latent": [
+    "438",
+    0
+   ],
+   "vae": [
+    "416",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXVImgToVideoInplace"
+  }
+ },
+ "418": {
+  "class_type": "PrimitiveInt",
+  "inputs": {
+   "value": [
+    "403",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Width"
+  }
+ },
+ "419": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "text, subtitles, watermark, logo, modern clothing, Chinese or Japanese costume, extra people, distorted face, deformed face, melting face, asymmetric eyes, blurry face, distorted hands, extra fingers, face morphing, identity change, flicker, flickering light, flashing, strobing, exposure changes, shimmering patterns, moire, blurry, low quality, cartoon",
+   "clip": [
+    "420",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "الوصف اللي انت مش عاوزة Negative Prompt"
+  }
+ },
+ "440": {
+  "class_type": "ComfyMathExpression",
+  "inputs": {
+   "expression": "a",
+   "values.a": [
+    "425",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Math Expression (fps)"
+  }
+ },
+ "441": {
+  "class_type": "ComfyMathExpression",
+  "inputs": {
+   "expression": "a * b + 1",
+   "values.b": [
+    "425",
+    0
+   ],
+   "values.a": [
+    "413",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Math Expression (length)"
+  }
+ },
+ "420": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+   "type": "ltxv",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load CLIP"
+  }
+ },
+ "442": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 42
+  },
+  "_meta": {
+   "title": "RandomNoise"
+  }
+ },
+ "421": {
+  "class_type": "PrimitiveInt",
+  "inputs": {
+   "value": [
+    "403",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Height"
+  }
+ },
+ "443": {
+  "class_type": "LTXVConcatAVLatent",
+  "inputs": {
+   "audio_latent": [
+    "431",
+    1
+   ],
+   "video_latent": [
+    "439",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Concat AV Latent"
+  }
+ },
+ "422": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "KSamplerSelect"
+  }
+ },
+ "444": {
+  "class_type": "ManualSigmas",
+  "inputs": {
+   "sigmas": "0.85, 0.7250, 0.4219, 0.0"
+  },
+  "_meta": {
+   "title": "ManualSigmas"
+  }
+ },
+ "423": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 20261029
+  },
+  "_meta": {
+   "title": "RandomNoise"
+  }
+ },
+ "445": {
+  "class_type": "LTXVDualCFGGuider",
+  "inputs": {
+   "negative": [
+    "415",
+    1
+   ],
+   "audio_cfg": 1,
+   "video_cfg": 1,
+   "model": [
+    "411",
+    0
+   ],
+   "positive": [
+    "415",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXV Dual CFG Guider"
+  }
+ },
+ "424": {
+  "class_type": "ManualSigmas",
+  "inputs": {
+   "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+  },
+  "_meta": {
+   "title": "ManualSigmas"
+  }
+ },
+ "446": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "KSamplerSelect"
+  }
+ },
+ "403": {
+  "class_type": "ResolutionSelector",
+  "inputs": {
+   "aspect_ratio": "16:9 (Widescreen)",
+   "megapixels": 1.33,
+   "multiple": 32
+  },
+  "_meta": {
+   "title": "Resolution الحجم والجودة"
+  }
+ },
+ "425": {
+  "class_type": "PrimitiveInt",
+  "inputs": {
+   "value": 24
+  },
+  "_meta": {
+   "title": "Frame Rate عدد الفريم في الثانية"
+  }
+ },
+ "447": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "guider": [
+    "445",
+    0
+   ],
+   "latent_image": [
+    "443",
+    0
+   ],
+   "noise": [
+    "442",
+    0
+   ],
+   "sigmas": [
+    "444",
+    0
+   ],
+   "sampler": [
+    "446",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SamplerCustomAdvanced"
+  }
+ },
+ "426": {
+  "class_type": "LatentUpscaleModelLoader",
+  "inputs": {
+   "model_name": "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors"
+  },
+  "_meta": {
+   "title": "Load Latent Upscale Model"
+  }
+ },
+ "448": {
+  "class_type": "LTXVSeparateAVLatent",
+  "inputs": {
+   "av_latent": [
+    "447",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Separate AV Latent"
+  }
+ },
+ "427": {
+  "class_type": "LTXVDualCFGGuider",
+  "inputs": {
+   "negative": [
+    "415",
+    1
+   ],
+   "audio_cfg": 1,
+   "video_cfg": 1,
+   "model": [
+    "411",
+    0
+   ],
+   "positive": [
+    "415",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXV Dual CFG Guider"
+  }
+ },
+ "449": {
+  "class_type": "VAEDecodeTiled",
+  "inputs": {
+   "overlap": 64,
+   "tile_size": 512,
+   "temporal_overlap": 32,
+   "vae": [
+    "416",
+    0
+   ],
+   "samples": [
+    "448",
+    0
+   ],
+   "temporal_size": 128
+  },
+  "_meta": {
+   "title": "VAE Decode (Tiled)"
+  }
+ },
+ "428": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "guider": [
+    "427",
+    0
+   ],
+   "latent_image": [
+    "432",
+    0
+   ],
+   "noise": [
+    "423",
+    0
+   ],
+   "sigmas": [
+    "424",
+    0
+   ],
+   "sampler": [
+    "422",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SamplerCustomAdvanced"
+  }
+ },
+ "429": {
+  "class_type": "LTXVImgToVideoInplace",
+  "inputs": {
+   "bypass": false,
+   "image": [
+    "436",
+    0
+   ],
+   "strength": 0.7,
+   "latent": [
+    "437",
+    0
+   ],
+   "vae": [
+    "416",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "LTXVImgToVideoInplace"
+  }
+ },
+ "408": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": [
+    "409",
+    0
+   ],
+   "clip": [
+    "420",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "CLIP Text Encode (Prompt)"
+  }
+ },
+ "409": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "A medium-wide shot inside a dim Joseon Dynasty throne hall at dusk, lit by steady warm candlelight and soft, even dusk light through closed paper doors, with the Irworobongdo screen of sun, moon and five peaks behind the throne. The king, a man in his forties in a crimson dragon-embroidered robe and black ikseongwan cap, grips the armrests of his throne and leans forward, his jaw tight with anger. In the foreground, an elderly grey-bearded minister in a dark red official robe and black winged samo hat stands holding an ivory tablet against his chest and refuses to lower his eyes. The king strikes the armrest with his palm and says in a low, furious voice, \"감히 과인의 명을 거역하겠다는 것이냐.\" The minister slowly bows his head, then raises it and answers firmly, \"전하, 신은 목이 떨어질지언정 이 상소를 거둘 수 없사옵니다.\" The camera slowly pushes in past the minister's shoulder toward the king's face in one continuous take. Afterward a heavy silence fills the hall, broken only by the faint crackle of candles, rustling silk, and wind pressing against the doors.\nThe lighting and exposure stay constant and stable throughout the shot.\n"
+  },
+  "_meta": {
+   "title": "Prompt الوصف"
+  }
+ },
+ "900": {
+  "class_type": "ImageScale",
+  "inputs": {
+   "image": [
+    "449",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "width": 1280,
+   "height": 720,
+   "crop": "disabled"
+  },
+  "_meta": {
+   "title": "Downscale to 720p"
+  }
+ }
+}

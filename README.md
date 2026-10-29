@@ -9,6 +9,8 @@
 | [minimax-h3-video-prompt](skills/minimax-h3-video-prompt/SKILL.md) | MiniMax H3(Hailuo 3) 영상 생성 프롬프트를 공식 가이드 형식(T2VA/I2VA/FL2VA/L2VA/Ref2VA)으로 작성 |
 | [story-image-prompts](skills/story-image-prompts/SKILL.md) | 소설·대본을 분석해 일관성 있는 이미지 생성 프롬프트(영어+한국어)와 낭독 타임라인 작성 |
 | [dnd-sleep-story](skills/dnd-sleep-story/SKILL.md) | 전통 D&D 세계관의 연재형 수면 이야기 대본(1편 약 20분) 작성 |
+| [ltx25-video](skills/ltx25-video/SKILL.md) | LTX-2.5 영상 프롬프트를 공식 가이드 형식으로 쓰고 RunningHub API로 시작 이미지와 영상 생성 |
+| [hanjungil-sageuk-shorts](skills/hanjungil-sageuk-shorts/SKILL.md) | 「같은 대사, 한중일 사극」 쇼츠 제작: 대본, 캐릭터 시트, LTX-2.5 컷, YuE2 BGM, ElevenLabs 나레이션, 레이아웃 합성 |
 | [short-drama-skill-finder](skills/short-drama-skill-finder/SKILL.md) | AI 숏드라마·만쥐용 스킬 추천 ([원본](https://github.com/UnderleveledBuilder/awesome-short-drama-skills), CC0) |
 
 ### HyperFrames (HTML로 영상 만들기)
