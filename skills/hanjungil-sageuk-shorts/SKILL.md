@@ -67,7 +67,15 @@ EP.01 반전: 조선 왕이 "아우! 왕 이거 진짜 드러워서 못 해먹�
 - ffmpeg에서 `-loop 1` 자막 PNG를 여러 장 겹치면 출력이 끝나지 않는다. 출력에 `-t 길이`를 꼭 준다.
 - crop 필터의 w/h에는 시간식 `t`를 쓸 수 없다. 움직이는 확대는 zoompan.
 - `pkill -f 패턴`은 같은 패턴이 든 내 셸까지 죽인다. PID로 끈다.
+- 소품 동작(찻잔에 금 가기, 부채 부러뜨리기)은 첫 생성에서 잘 안 나온다(EP.02: 찻잔은 그대로, 부채는 펼쳐짐). "knuckles turn white… the cup cracks loudly, jagged crack lines", "the fan never opens… snaps in two"처럼 결과 상태와 하지 말아야 할 동작까지 적고 시드를 바꿔 재생성한다.
+- faster-whisper가 PyAV 버전 충돌(`metadata_errors`)로 파일을 못 열면 ffmpeg로 16kHz mono PCM을 뽑아 numpy 배열로 넘긴다(History-Actor `ep02/scripts/stt.py`).
+- 중국 왕비/후궁 클리셰("本宫", 금 호갑투, 량바터우)는 청 궁중극 것이다. 이런 회차는 배지를 "청나라 · 중국"으로 쓴다.
 - ElevenLabs 키는 TTS만 된다(voices_read, speech_to_text 권한 없음). 받아쓰기는 faster-whisper로.
+
+## 회차 기록
+
+- EP.01 "아니 되옵니다": 신하 3명 → 반전 왕 퇴사 선언 → 쿠키 세 신하 몰래 "예스!".
+- EP.02 "후궁이라니요?"(35초): 왕비 3명(조선 찻잔 금, 청 호갑투 톡톡, 에도 부채 뚝) → 반전 쫄보 왕 "과인이 후궁을 들이려 하오!… 농담이었소." → 쿠키 세 왕비 찻잔 짠 "한 번 째려보면 끝이지." 쿠키에 대사가 있으면 반전 컷처럼 로마자 + 한·중·일 3줄 Line Swap. 사용자: 반전을 동물(고양이)로 하지 않는다.
 
 ## 다음 회차 후보
 
