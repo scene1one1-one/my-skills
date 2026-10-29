@@ -1,5 +1,6 @@
 set -e
 cd "$(dirname "$0")"
+python3 layout.py
 FR=24; VF="scale=1080:608:flags=lanczos,setsar=1"
 # normalize audio pieces
 for c in kr cn jp; do
@@ -34,10 +35,9 @@ ffmpeg -v error -y -loop 1 -i ov_king.png -i cut_king_fast.mp4 -i bgmn_king.wav 
  -map "[v]" -map "[a]" -t $KD -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg_king.mp4
 # outro thumbs from last frames
 for c in kr cn jp; do ffmpeg -v error -y -sseof -0.3 -i cut_$c.mp4 -frames:v 1 last_$c.png; done
-python3 layout.py
 ffmpeg -v error -y -loop 1 -t 2.8 -i ov_outro.png -i narn_outro.wav -i bgmn_king.wav -filter_complex \
  "[0]fps=$FR,format=yuv420p,fade=t=out:st=2.5:d=0.3[v];[2]atrim=$KD:$KE,asetpts=PTS-STARTPTS,volume=-3dB[b];[1][b]amix=inputs=2:duration=longest:normalize=0,apad,atrim=0:2.8[a]" \
  -map "[v]" -map "[a]" -t 2.8 -r $FR -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -ar 48000 -ac 2 seg9.mp4
 printf "file seg0.mp4\nfile seg_kr.mp4\nfile seg_cn.mp4\nfile seg_jp.mp4\nfile seg_king.mp4\nfile seg9.mp4\n" > list.txt
-ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v3.mp4
-ffprobe -v error -show_entries format=duration -of csv=p=0 final_v3.mp4
+ffmpeg -v error -y -f concat -safe 0 -i list.txt -c:v libx264 -crf 19 -preset slow -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart final_v6.mp4
+ffprobe -v error -show_entries format=duration -of csv=p=0 final_v6.mp4

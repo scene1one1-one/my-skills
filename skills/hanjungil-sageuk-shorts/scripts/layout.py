@@ -1,5 +1,5 @@
 import os
-from PIL import Image,ImageDraw,ImageFont
+from PIL import Image,ImageDraw,ImageFont,ImageFilter
 W,H=1080,1920;VY=540;VH=608
 SANS="/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc";SERIF="/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc"
 LANG={"kr":1,"cn":2,"jp":0}
@@ -10,9 +10,9 @@ def ctext(d,y,t,f,fill,stroke=0,sc="black",w0=W):
     w=d.textlength(t,font=f);d.text(((w0-w)/2,y),t,font=f,fill=fill,stroke_width=stroke,stroke_fill=sc)
 THEME={"kr":(245,245,240),"cn":(214,38,38),"jp":(40,96,200),None:(200,200,200)}
 CUTS={
- "kr":dict(n=1,badge="조선  ·  한국",line="전하… 아니 되옵니다!",pron=None,tr="전하… 아니 되옵니다!",tag="#눈물의_읍소",sub=(0.5,4.4)),
- "cn":dict(n=2,badge="명나라  ·  중국",line="皇上，万万不可！",pron="[황상, 완완 부커!]",tr="폐하, 절대 아니 되옵니다!",tag="#우렁찬_직언",sub=(0.0,4.4)),
- "jp":dict(n=3,badge="에도  ·  일본",line="殿…なりませぬ。",pron="[도노… 나리마세누]",tr="주군… 아니 되옵니다.",tag="#침묵의_압박",sub=(0.6,4.4)),
+ "kr":dict(n=1,badge="조선  ·  한국",line="전하… 아니 되옵니다!",pron=None,tr="전하, 제발 그것만은 아니 되옵니다!",tag="#눈물의_읍소",sub=(0.5,4.4)),
+ "cn":dict(n=2,badge="명나라  ·  중국",line="皇上，万万不可！",pron="[황상, 완완 부커!]",tr="폐하, 결코 그리하셔선 아니 되옵니다!",tag="#우렁찬_직언",sub=(0.0,4.4)),
+ "jp":dict(n=3,badge="에도  ·  일본",line="殿…なりませぬ。",pron="[도노… 나리마세누]",tr="주군… 그리하셔서는 아니 되옵니다.",tag="#침묵의_압박",sub=(0.6,4.4)),
 }
 def base(theme=None):
     im=Image.new("RGB",(W,H),(0,0,0));d=ImageDraw.Draw(im)
@@ -33,15 +33,20 @@ def cut(c,out):
     d.rounded_rectangle([(W-w)/2-34,1190,(W+w)/2+34,1266],radius=14,fill=col)
     ctext(d,1196,t,f,(0,0,0) if c=="kr" else (255,255,255))
     y=1320
-    ctext(d,y,k["tr"],FF(LINE,54),(255,255,255),1,(255,255,255));y+=90
+    ctext(d,y,k["tr"],FF(TITLE,58),(255,255,255));y+=95
     if k["pron"]: ctext(d,y,k["pron"],F(40),(150,150,150));y+=70
     ctext(d,1560,k["tag"],F(44),col if c!="kr" else (220,220,220))
     dots(d,k["n"]);im.save(out)
+def glowsub(text,out):
+    """movie-style subtitle: thin white text with a soft faint dark glow, no outline"""
+    f=FF(LINE,48);y=VH-90
+    g=Image.new("RGBA",(W,VH),(0,0,0,0));gd=ImageDraw.Draw(g);ctext(gd,y,text,f,(0,0,0,255),4,(0,0,0,255))
+    g=g.filter(ImageFilter.GaussianBlur(9));a=g.split()[3].point(lambda v:int(v*0.55));g.putalpha(a)
+    t=Image.new("RGBA",(W,VH),(0,0,0,0));ctext(ImageDraw.Draw(t),y,text,f,(255,255,255,255))
+    Image.alpha_composite(g,t).save(out)
 def onvideo(c,out):
     """transparent 1080x608 movie-style subtitle in original language"""
-    im=Image.new("RGBA",(W,VH),(0,0,0,0));d=ImageDraw.Draw(im);k=CUTS[c]
-    f=FF(LINE,48);ctext(d,VH-90,k["line"],f,(255,255,255))
-    im.save(out)
+    glowsub(CUTS[c]["line"],out)
 def intro(out):
     im,d=base(None)
     ctext(d,1250,"같은 대사,",F(76,True),(255,255,255))
@@ -68,7 +73,5 @@ KING=dict(badge="반전  ·  그 시각 조선의 왕",tag="#왕_퇴사_선언",
 def king(out):
     im,d=base("kr")
     im.save(out)
-    for i,(s,a,b) in enumerate(KING["subs"]):
-        o=Image.new("RGBA",(W,VH),(0,0,0,0));dd=ImageDraw.Draw(o)
-        ctext(dd,VH-90,s,FF(LINE,48),(255,255,255));o.save(f"sub_king{i}.png")
+    for i,(s,a,b) in enumerate(KING["subs"]): glowsub(s,f"sub_king{i}.png")
 if __name__=="__main__": king("ov_king.png")
