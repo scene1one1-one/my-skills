@@ -43,12 +43,12 @@ def sweep(c,outdir,dur=5.0):
         im.save(f"{outdir}/f{fi:04d}.png")
 # intro clip wipe, two lines, keywords yellow
 INTRO=[[("같은",0.0,0.28,True),("대사,",0.28,0.78,True)],
-       [("한중일",1.46,1.96,True),("사극은",1.96,2.54,False),("어떻게",2.54,3.06,False),("다를까?",3.06,3.68,False)]]
+       [("한중일",1.46,1.96,"kcj"),("사극은",1.96,2.54,False),("어떻게",2.54,3.06,False),("다를까?",3.06,3.68,False)]]
 def clipwipe(outdir,dur=3.9,top=1230,sizes=(76,68),lh=105):
     os.makedirs(outdir,exist_ok=True);d0=ImageDraw.Draw(Image.new("RGB",(4,4)));H=260
     lines=[]
     for li,ln in enumerate(INTRO):
-        f=L.F(sizes[li],True);gap=22;ws=[d0.textlength(w[0],font=f) for w in ln];tot=sum(ws)+gap*(len(ws)-1);x=(L.W-tot)/2;xs=[]
+        f=L.FF(L.SUBT,sizes[li]);gap=22;ws=[d0.textlength(w[0],font=f) for w in ln];tot=sum(ws)+gap*(len(ws)-1);x=(L.W-tot)/2;xs=[]
         for w in ws: xs.append(x);x+=w+gap
         lines.append((f,ln,xs,ws,li*lh))
     for fi in range(int(dur*FR)+1):
@@ -57,8 +57,15 @@ def clipwipe(outdir,dur=3.9,top=1230,sizes=(76,68),lh=105):
             for i,(w,s,e,kw) in enumerate(ln):
                 if t<s: continue
                 p=p2out((t-s)/0.3)
-                color=(255,215,0) if (kw and t>=s+0.1) else (255,255,255)
-                g=Image.new("RGBA",(L.W,H),(0,0,0,0));ImageDraw.Draw(g).text((xs[i],y),w,font=f,fill=color+(255,))
+                g=Image.new("RGBA",(L.W,H),(0,0,0,0));gd=ImageDraw.Draw(g)
+                if kw=="kcj":  # 한=white 중=red 일=blue (country theme colours)
+                    cx=xs[i]
+                    for ch,k in zip(w,["kr","cn","jp"]):
+                        col=L.THEME[k] if t>=s+0.1 else (255,255,255)
+                        gd.text((cx,y),ch,font=f,fill=col+(255,));cx+=gd.textlength(ch,font=f)
+                else:
+                    color=(255,215,0) if (kw and t>=s+0.1) else (255,255,255)
+                    gd.text((xs[i],y),w,font=f,fill=color+(255,))
                 cut=int(xs[i]-4+(ws[i]+12)*p)
                 g=g.crop((0,0,max(cut,0),H)) if cut>0 else None
                 if g: im.alpha_composite(g,(0,0))
