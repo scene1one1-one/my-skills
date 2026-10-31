@@ -78,6 +78,8 @@ EP.01 반전: 조선 왕이 "아우! 왕 이거 진짜 드러워서 못 해먹�
 - 새 컨테이너에서 `apt-get install fonts-noto-cjk`가 "Unable to locate package"면 `apt-get update`부터.
 - ElevenLabs 키는 TTS만 된다(voices_read, speech_to_text 권한 없음). 받아쓰기는 faster-whisper로.
 
+- 같은 인물의 다른 장면은 캐릭터 시트만 참조하면 얼굴이 달라진다. 이미 쓴 컷의 시작 이미지를 두 번째 참조로 넣고 "keep exactly the same face from image 2"라고 쓴다. 이전 영상의 마지막 프레임을 시작 이미지로 쓰면 영상 중 바뀐 얼굴이 그대로 이어지니 쓰지 않는다. 누운 자세에서 벌떡 일어나는 큰 동작도 얼굴이 흐트러지니 반쯤 기댄 자세에서 시작한다(EP.04 부활 컷).
+
 ## 회차 기록
 
 - EP.01 "아니 되옵니다": 신하 3명 → 반전 왕 퇴사 선언 → 쿠키 세 신하 몰래 "예스!".
